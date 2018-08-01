@@ -99,6 +99,7 @@ def test(directory):
   """tf.data.Dataset object for MNIST test data."""
   return dataset(directory, 't10k-images-idx3-ubyte', 't10k-labels-idx1-ubyte')
   
+  
 def create_model(data_format):
   """Model to recognize digits in the MNIST dataset.
   Network structure is equivalent to:
@@ -240,12 +241,8 @@ def run_mnist(flags_obj):
     return dataset.test(flags_obj.data_dir).batch(
         flags_obj.batch_size).make_one_shot_iterator().get_next()
 
-  # Set up hook that outputs training logs every 100 steps.
-  train_hooks = hooks_helper.get_train_hooks(
-      flags_obj.hooks, model_dir=flags_obj.model_dir,
-      batch_size=flags_obj.batch_size)
   
-  train_spec = tf.estimator.TrainSpec(input_fn=train_input_fn, hooks=train_hooks)
+  train_spec = tf.estimator.TrainSpec(input_fn=train_input_fn)
   eval_spec = tf.estimator.EvalSpec(input_fn=eval_input_fn)
   tf.estimator.train_and_evaluate(mnist_classifier, train_spec, eval_spec)
     
