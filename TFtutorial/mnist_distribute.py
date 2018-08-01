@@ -267,7 +267,7 @@ def run_mnist(flags_obj):
     mnist_classifier.export_savedmodel(flags_obj.export_dir, input_fn)
 
 
-def main(_):
+def main(argv):
   args = parser.parse_args(argv[1:])
   run_mnist(args)
 
