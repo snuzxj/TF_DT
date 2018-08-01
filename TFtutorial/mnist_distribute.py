@@ -26,6 +26,7 @@ parser.add_argument('--train_steps', default=1000, type=int, help='number of tra
 parser.add_argument('--data_dir', default='./mnist_data', type=str, help='mnist data path')
 parser.add_argument('--model_dir', default='./mnist_model', type=str, help='data path')
 parser.add_argument('--export_dir', default=None, type=str, help='export path')
+parser.add_argument('--data_format', default=None, type=str, help='channel_first or channel_last')
 
 LEARNING_RATE = 1e-4
 
