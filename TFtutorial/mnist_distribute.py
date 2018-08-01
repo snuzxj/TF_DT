@@ -89,13 +89,13 @@ def dataset(directory, images_file, labels_file):
   return tf.data.Dataset.zip((images, labels))
 
 
-def train(directory):
+def dtrain(directory):
   """tf.data.Dataset object for MNIST training data."""
   return dataset(directory, 'train-images-idx3-ubyte',
                  'train-labels-idx1-ubyte')
 
 
-def test(directory):
+def dtest(directory):
   """tf.data.Dataset object for MNIST test data."""
   return dataset(directory, 't10k-images-idx3-ubyte', 't10k-labels-idx1-ubyte')
   
@@ -229,7 +229,7 @@ def run_mnist(flags_obj):
     # When choosing shuffle buffer sizes, larger sizes result in better
     # randomness, while smaller sizes use less memory. MNIST is a small
     # enough dataset that we can easily shuffle the full epoch.
-    ds = dataset.train(flags_obj.data_dir)
+    ds = dtrain(flags_obj.data_dir)
     ds = ds.cache().shuffle(buffer_size=50000).batch(flags_obj.batch_size)
 
     # Iterate through the dataset a set number (`epochs_between_evals`) of times
@@ -238,7 +238,7 @@ def run_mnist(flags_obj):
     return ds
 
   def eval_input_fn():
-    return dataset.test(flags_obj.data_dir).batch(
+    return dtest(flags_obj.data_dir).batch(
         flags_obj.batch_size).make_one_shot_iterator().get_next()
 
   
