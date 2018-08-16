@@ -234,7 +234,7 @@ def run_mnist(flags_obj):
 
     # Iterate through the dataset a set number (`epochs_between_evals`) of times
     # during each training session.
-    ds = ds.repeat(flags_obj.train_steps)
+    ds = ds.repeat()
     return ds
 
   def eval_input_fn():
