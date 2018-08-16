@@ -19,6 +19,8 @@ from __future__ import print_function
 
 import tensorflow as tf  # pylint: disable=g-bad-import-order
 import argparse
+import os
+import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--batch_size', default=256, type=int, help='batch size')
@@ -210,7 +212,7 @@ def run_mnist(flags_obj):
     flags_obj: An object containing parsed flag values.
   """
   model_function = model_fn
-  config = tf.estimator.RunConfig()
+  config = tf.estimator.RunConfig(save_checkpoints_secs=30,save_summary_steps=200,log_step_count_steps=200)
   data_format = flags_obj.data_format
   if data_format is None:
     data_format = ('channels_first'
@@ -218,6 +220,7 @@ def run_mnist(flags_obj):
   mnist_classifier = tf.estimator.Estimator(
       model_fn=model_function,
       model_dir=flags_obj.model_dir,
+      config=config,
       params={
           'data_format': data_format,
       })
@@ -239,11 +242,11 @@ def run_mnist(flags_obj):
 
   def eval_input_fn():
     return dtest(flags_obj.data_dir).batch(
-        flags_obj.batch_size).make_one_shot_iterator().get_next()
+        100).make_one_shot_iterator().get_next()
 
   
-  train_spec = tf.estimator.TrainSpec(input_fn=train_input_fn)
-  eval_spec = tf.estimator.EvalSpec(input_fn=eval_input_fn)
+  train_spec = tf.estimator.TrainSpec(input_fn=train_input_fn, max_steps=flags_obj.train_steps)
+  eval_spec = tf.estimator.EvalSpec(input_fn=eval_input_fn,throttle_secs=300)
   tf.estimator.train_and_evaluate(mnist_classifier, train_spec, eval_spec)
     
   '''# Train and evaluate model.
